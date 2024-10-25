@@ -3,10 +3,10 @@
 
 ## Praktikum 1: Dasar State dengan Model-View
 ### Lankah 1: Buat Project Baru
-```dart
+> Buatlah sebuah project flutter baru dengan nama master_plan di folder src week-11 repository GitHub Anda. Lalu buatlah susunan folder dalam project seperti gambar berikut ini.
 
-```
 ### Lankah 2: Membuat model task,dart
+> Praktik terbaik untuk memulai adalah pada lapisan data (data layer). Ini akan memberi Anda gambaran yang jelas tentang aplikasi Anda, tanpa masuk ke detail antarmuka pengguna Anda. Di folder model, buat file bernama task.dart dan buat class Task. Class ini memiliki atribut description dengan tipe data String dan complete dengan tipe data Boolean, serta ada konstruktor. Kelas ini akan menyimpan data tugas untuk aplikasi kita. Tambahkan kode berikut:
 ```dart
 class Task {
   final String description;
@@ -18,7 +18,9 @@ class Task {
   });
 }
 ```
+
 ### Lankah 3: Buat file plan.dart
+> Kita juga perlu sebuah List untuk menyimpan daftar rencana dalam aplikasi to-do ini. Buat file plan.dart di dalam folder models dan isi kode seperti berikut.
 ```dart
 import './task.dart';
 
@@ -29,12 +31,16 @@ class Plan {
   const Plan({this.name = '', this.tasks = const []});
 }
 ```
+
 ### Lankah 4: Buat file data_layer.dart
+> Kita dapat membungkus beberapa data layer ke dalam sebuah file yang nanti akan mengekspor kedua model tersebut. Dengan begitu, proses impor akan lebih ringkas seiring berkembangnya aplikasi. Buat file bernama data_layer.dart di folder models. Kodenya hanya berisi export seperti berikut.
 ```dart
 export 'plan.dart';
 export 'task.dart';
 ```
+
 ### Lankah 5: Pindah ke file main.dart
+> Ubah isi kode main.dart sebagai berikut.
 ```dart
 import 'package:flutter/material.dart';
 import './views/plan_screen.dart';
@@ -53,7 +59,9 @@ class MasterPlanApp extends StatelessWidget {
   }
 }
 ```
+
 ### Lankah 6: Buat plan_screen.dart
+> Pada folder views, buatlah sebuah file plan_screen.dart dan gunakan templat StatefulWidget untuk membuat class PlanScreen. Isi kodenya adalah sebagai berikut. Gantilah teks ‘Namaku' dengan nama panggilan Anda pada title AppBar.
 ```dart
 import '../models/data_layer.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +87,9 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 }
 ```
+
 ### Lankah 7: Buat method _buildAddTaskButton()
+> Anda akan melihat beberapa error di langkah 6, karena method yang belum dibuat. Ayo kita buat mulai dari yang paling mudah yaitu tombol Tambah Rencana. Tambah kode berikut di bawah method build di dalam class _PlanScreenState.
 ```dart
 Widget _buildAddTaskButton() {
   return FloatingActionButton(
@@ -96,7 +106,9 @@ Widget _buildAddTaskButton() {
   );
 }
 ```
+
 ### Lankah 8: Buat widget _buildList()
+> Kita akan buat widget berupa List yang dapat dilakukan scroll, yaitu ListView.builder. Buat widget ListView seperti kode berikut ini.
 ```dart
 Widget _buildList() {
   return ListView.builder(
@@ -106,7 +118,9 @@ Widget _buildList() {
   );
 }
 ```
+
 ### Lankah 9: Buat widget _buildTaskTile
+> Dari langkah 8, kita butuh ListTile untuk menampilkan setiap nilai dari plan.tasks. Kita buat dinamis untuk setiap index data, sehingga membuat view menjadi lebih mudah. Tambahkan kode berikut ini.
 ```dart
  Widget _buildTaskTile(Task task, int index) {
     return ListTile(
@@ -142,13 +156,16 @@ Widget _buildList() {
     );
   }
 ```
+
 ### Lankah 10: Tambah Scroll Controller
+> Anda dapat menambah tugas sebanyak-banyaknya, menandainya jika sudah beres, dan melakukan scroll jika sudah semakin banyak isinya. Namun, ada salah satu fitur tertentu di iOS perlu kita tambahkan. Ketika keyboard tampil, Anda akan kesulitan untuk mengisi yang paling bawah. Untuk mengatasi itu, Anda dapat menggunakan ScrollController untuk menghapus focus dari semua TextField selama event scroll dilakukan. Pada file plan_screen.dart, tambahkan variabel scroll controller di class State tepat setelah variabel plan.
 ```dart
 class _PlanScreenState extends State<PlanScreen> {
   Plan plan = const Plan();
   late ScrollController scrollController;
 ```
 ### Lankah 11: Tambah Scroll Listener
+> Tambahkan method initState() setelah deklarasi variabel scrollController seperti kode berikut.
 ```dart
 @override
 void initState() {
@@ -159,7 +176,9 @@ void initState() {
     });
 }
 ```
+
 ### Lankah 12: Tambah controller dan keyboard behavior
+> Tambahkan controller dan keyboard behavior pada ListView di method _buildList seperti kode berikut ini.
 ```dart
 return ListView.builder(
   controller: scrollController,
@@ -168,7 +187,9 @@ return ListView.builder(
     ? ScrollViewKeyboardDismissBehavior.onDrag
     : ScrollViewKeyboardDismissBehavior.manual,
 ```
+
 ### Lankah 13: Terakhir, tambah method dispose()
+> Terakhir, tambahkan method dispose() berguna ketika widget sudah tidak digunakan lagi.
 ```dart
 @override
 void dispose() {
@@ -177,6 +198,8 @@ void dispose() {
 }
 ```
 ### Lankah 14: Hasil
+> Lakukan Hot restart (bukan hot reload) pada aplikasi Flutter Anda. Anda akan melihat tampilan akhir seperti gambar berikut. Jika masih terdapat error, silakan diperbaiki hingga bisa running.
+
 ![photo result practicum 1](lib\assets\images\result-p1.jpg)
 ![gif result practicum 1](lib\assets\gifs\gif-p1.gif)
 
@@ -197,3 +220,180 @@ void dispose() {
 > method pada langkah 11 berfungsi untuk menginisialisasi widget Stateful saat pertama kali dibangun. Di dalamnya, sebuah ScrollController diinisialisasi untuk memantau pergerakan scroll pada widget yang mendukung scrolling. Sebuah listener ditambahkan ke ScrollController, yang secara otomatis mengalihkan fokus dari elemen UI yang sedang aktif (seperti input field) setiap kali pengguna menggulir. sedangkan untuk langkah 13 berfungsi untuk membersihkan resource yang terkait dengan widget, seperti ScrollController. method tersebut juga dapat membantu memaksimalkan penggunaan resource aplikasi seperti menghapus widget yang sudah tidak digunakan.
 
 6. Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke spreadsheet yang telah disediakan!
+
+---
+
+## Praktikum 2: Mengelola Data Layer dengan InheritedWidget dan InheritedNotifier
+### Langkah 1: Buat file plan_provider.dart
+> Buat folder baru provider di dalam folder lib, lalu buat file baru dengan nama plan_provider.dart berisi kode seperti berikut.
+```dart
+import 'package:flutter/material.dart';
+import 'package:master_plan/models/data_layer.dart';
+
+class PlanProvider extends InheritedNotifier<ValueNotifier<Plan>> {
+  const PlanProvider({
+    super.key,
+    required Widget child,
+    required ValueNotifier<Plan> notifier})
+    : super(child: child, notifier: notifier);
+
+  static ValueNotifier<Plan> of(BuildContext context) {
+    return context.
+    dependOnInheritedWidgetOfExactType<PlanProvider>()!.notifier!;
+  }
+}
+```
+
+### Langkah 2: Edit main.dart
+> Gantilah pada bagian atribut home dengan PlanProvider seperti berikut. Jangan lupa sesuaikan bagian impor jika dibutuhkan.
+```dart
+return MaterialApp(
+    theme: ThemeData(primarySwatch: Colors.purple),
+    // home: PlanScreen(),
+    home: PlanProvider(
+    notifier: ValueNotifier(const Plan()),
+    child: const PlanScreen()),
+);
+```
+
+### Langkah 3: Tambah method pada model plan.dart
+> Tambahkan dua method di dalam model class Plan seperti kode berikut.
+```dart
+int get completedCount => tasks.where((task) => task.complete).length;
+
+String get completenessMessage => '$completedCount out of ${tasks.length} tasks';
+```
+
+### Langkah 4: Pindah ke PlanScreen
+> Edit PlanScreen agar menggunakan data dari PlanProvider. Hapus deklarasi variabel plan (ini akan membuat error). Kita akan perbaiki pada langkah 5 berikut ini.
+```dart
+class _PlanScreenState extends State<PlanScreen> {
+  // Plan plan = const Plan();
+  late ScrollController scrollController;
+```
+
+### Langkah 5: Edit method _buildAddTaskButton
+> Tambahkan BuildContext sebagai parameter dan gunakan PlanProvider sebagai sumber datanya. Edit bagian kode seperti berikut.
+```dart
+Widget _buildAddTaskButton(BuildContext context) {
+  ValueNotifier<Plan> planNotifier = PlanProvider.of(context);
+  return FloatingActionButton(
+    child: const Icon(Icons.add),
+    onPressed: () {
+      Plan currentPlan = planNotifier.value;
+      planNotifier.value = Plan(
+        name: currentPlan.name,
+        tasks: List<Task>.from(currentPlan.tasks)..add(const Task()),
+      );
+    },
+  );
+}
+```
+
+### Langkah 6: Edit method _buildTaskTile
+>Tambahkan parameter BuildContext, gunakan PlanProvider sebagai sumber data. Ganti TextField menjadi TextFormField untuk membuat inisial data provider menjadi lebih mudah.
+```dart
+Widget _buildTaskTile(Task task, int index, BuildContext context) {
+  ValueNotifier<Plan> planNotifier = PlanProvider.of(context);
+  return ListTile(
+    leading: Checkbox(
+       value: task.complete,
+       onChanged: (selected) {
+         Plan currentPlan = planNotifier.value;
+         planNotifier.value = Plan(
+           name: currentPlan.name,
+           tasks: List<Task>.from(currentPlan.tasks)
+             ..[index] = Task(
+               description: task.description,
+               complete: selected ?? false,
+             ),
+         );
+       }),
+    title: TextFormField(
+      initialValue: task.description,
+      onChanged: (text) {
+        Plan currentPlan = planNotifier.value;
+        planNotifier.value = Plan(
+          name: currentPlan.name,
+          tasks: List<Task>.from(currentPlan.tasks)
+            ..[index] = Task(
+              description: text,
+              complete: task.complete,
+            ),
+        );
+      },
+    ),
+  );
+}
+```
+
+### Langkah 7: Edit _buildList
+> Sesuaikan parameter pada bagian _buildTaskTile seperti kode berikut.
+```dart
+Widget _buildList(Plan plan) {
+   return ListView.builder(
+     controller: scrollController,
+     itemCount: plan.tasks.length,
+     itemBuilder: (context, index) =>
+        _buildTaskTile(plan.tasks[index], index, context),
+   );
+}
+```
+
+### Langkah 8: Tetap di class PlanScreen
+> Edit method build sehingga bisa tampil progress pada bagian bawah (footer). Caranya, bungkus (wrap) _buildList dengan widget Expanded dan masukkan ke dalam widget Column seperti kode pada Langkah 9.
+```dart
+Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('Master Plan Lukman Eka')),
+        body: ValueListenableBuilder<Plan>(
+        valueListenable: PlanProvider.of(context),
+        builder: (context, plan, child) {
+            return Column(
+            children: [
+                Expanded(child: _buildList(plan)),
+                SafeArea(child: Text(plan.completenessMessage))
+            ],
+            );
+        },
+        ),
+        floatingActionButton: _buildAddTaskButton(context),
+    );
+}
+```
+
+### Langkah 9: Tambah widget SafeArea
+> Terakhir, tambahkan widget SafeArea dengan berisi completenessMessage pada akhir widget Column. Perhatikan kode berikut ini.
+```dart
+Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('Master Plan Lukman Eka')),
+        body: ValueListenableBuilder<Plan>(
+        valueListenable: PlanProvider.of(context),
+        builder: (context, plan, child) {
+            return Column(
+            children: [
+                Expanded(child: _buildList(plan)),
+                SafeArea(child: Text(plan.completenessMessage))
+            ],
+            );
+        },
+        ),
+        floatingActionButton: _buildAddTaskButton(context),
+    );
+}
+```
+### Tugas Praktikum 2
+1. Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file README.md! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki sesuai dengan tujuan aplikasi tersebut dibuat.
+
+2. Jelaskan mana yang dimaksud InheritedWidget pada langkah 1 tersebut! Mengapa yang digunakan InheritedNotifier?
+> PlanProvider mewarisi dari InheritedNotifier, yang merupakan subclass dari InheritedWidget. InheritedNotifier digunakan karena selain mewarisi sifat penyebaran data seperti InheritedWidget
+
+3. Jelaskan maksud dari method di langkah 3 pada praktikum tersebut! Mengapa dilakukan demikian?
+> kode tersebut digunakan untuk mendapatkan data dari model task dengan menggunakan getter. kode tersebut dapat memberikan efisiensi pada struktur porgram yang dikembangkan.
+
+4. Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!
+> dari langkah-langkah praktikum ini, kita menggunakan inherited untuk memberikan nilai pada 2 widget atau lebih, seperti dengan menampilkan text pada footer untuk menampilkan jumlah task dan task yang sudah terchecklist.
+![gif result practicum 1](lib\assets\gifs\gif-p2.gif)
+
+5. Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke spreadsheet yang telah disediakan!
